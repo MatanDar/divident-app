@@ -86,8 +86,8 @@ export default function HomePage() {
   if (loading || fetching) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <div className="h-14 bg-teal-800" />
-        <div className="flex items-center justify-center h-64 text-teal-700 text-lg">
+        <div className="h-14 bg-blue-800" />
+        <div className="flex items-center justify-center h-64 text-blue-700 text-lg">
           טוען קריאות מ-Google Sheets...
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function HomePage() {
         {/* Header + stats */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-teal-800">לוח קריאות שירות</h1>
+            <h1 className="text-2xl font-bold text-blue-800">לוח קריאות שירות</h1>
             <p className="text-gray-500 text-sm mt-0.5">
               {calls.length} קריאות בסך הכל
               {filtered.length !== calls.length && ` · ${filtered.length} מסוננות`}
@@ -112,7 +112,7 @@ export default function HomePage() {
             <button onClick={fetchCalls} className="inline-flex items-center gap-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 px-4 py-2.5 rounded-lg text-sm transition-colors">
               ↻ רענן
             </button>
-            <Link href="/new-call" className="inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm">
+            <Link href="/new-call" className="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm">
               + קריאה חדשה
             </Link>
           </div>
@@ -149,8 +149,8 @@ export default function HomePage() {
                 onClick={() => setStatusFilter(s)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                   statusFilter === s
-                    ? 'bg-teal-700 text-white border-teal-700'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-teal-400'
+                    ? 'bg-blue-700 text-white border-blue-700'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400'
                 }`}
               >
                 {s}
@@ -164,7 +164,7 @@ export default function HomePage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-teal-800 text-white">
+                <tr className="bg-blue-800 text-white">
                   <th className="text-right px-4 py-3 font-semibold">#</th>
                   <th className="text-right px-4 py-3 font-semibold">שם לקוח</th>
                   <th className="text-right px-4 py-3 font-semibold">מס׳ לקוח</th>
@@ -214,7 +214,7 @@ export default function HomePage() {
                         <div className="flex gap-1 justify-end">
                           <Link
                             href={`/call/${call.id}`}
-                            className="text-xs px-2 py-1 bg-teal-50 text-teal-700 hover:bg-teal-100 rounded transition-colors"
+                            className="text-xs px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded transition-colors"
                           >
                             ערוך
                           </Link>

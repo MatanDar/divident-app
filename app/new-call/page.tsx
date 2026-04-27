@@ -70,7 +70,7 @@ export default function NewCallPage() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-teal-700">טוען...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-blue-700">טוען...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -78,7 +78,7 @@ export default function NewCallPage() {
 
       <main className="max-w-3xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-teal-800">קריאה חדשה</h1>
+          <h1 className="text-2xl font-bold text-blue-800">קריאה חדשה</h1>
           <p className="text-gray-500 text-sm mt-1">מלא את הפרטים לפתיחת קריאת שירות חדשה</p>
         </div>
 
@@ -92,7 +92,7 @@ export default function NewCallPage() {
 
           {/* Section: Customer details */}
           <section>
-            <h2 className="text-sm font-semibold text-teal-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
+            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
               פרטי לקוח
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -122,7 +122,7 @@ export default function NewCallPage() {
 
           {/* Section: Call details */}
           <section>
-            <h2 className="text-sm font-semibold text-teal-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
+            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
               פרטי קריאה
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -196,7 +196,7 @@ export default function NewCallPage() {
 
           {/* Section: Dates */}
           <section>
-            <h2 className="text-sm font-semibold text-teal-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
+            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
               תאריכים
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -225,7 +225,7 @@ export default function NewCallPage() {
 
           {/* Description */}
           <section>
-            <h2 className="text-sm font-semibold text-teal-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
+            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
               תיאור / הערות
             </h2>
             <textarea
@@ -243,7 +243,7 @@ export default function NewCallPage() {
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-teal-700 hover:bg-teal-600 disabled:bg-teal-400 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+              className="flex-1 bg-blue-700 hover:bg-blue-600 disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
             >
               {saving ? 'שומר...' : 'שמור קריאה'}
             </button>
