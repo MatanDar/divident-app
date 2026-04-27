@@ -55,13 +55,6 @@ export async function addCall(data: Record<string, string>) {
   const auth = getAuth();
   const sheets = google.sheets({ version: 'v4', auth });
 
-  // Find the next empty row by reading column A
-  const existing = await sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_NAME}!A:A`,
-  });
-  const nextRow = (existing.data.values || []).length + 1;
-
   const values = [[
     data.customerName || '',
     data.customerNumber || '',
@@ -75,10 +68,11 @@ export async function addCall(data: Record<string, string>) {
     data.priority || '',
   ]];
 
-  await sheets.spreadsheets.values.update({
+  await sheets.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_NAME}!A${nextRow}:J${nextRow}`,
+    range: `${SHEET_NAME}!A1`,
     valueInputOption: 'USER_ENTERED',
+    insertDataOption: 'INSERT_ROWS',
     requestBody: { values },
   });
 }

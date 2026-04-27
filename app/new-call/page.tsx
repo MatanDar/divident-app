@@ -45,12 +45,15 @@ export default function NewCallPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      if (!res.ok) throw new Error('Failed');
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `HTTP ${res.status}`);
+      }
       setSuccess(true);
       setTimeout(() => router.push('/'), 1500);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('שגיאה בשמירה. נסה שוב.');
+      alert(`שגיאה בשמירה: ${err.message}`);
     } finally {
       setSaving(false);
     }

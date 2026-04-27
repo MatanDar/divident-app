@@ -14,10 +14,11 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const data = await request.json();
+    console.log('POST /api/calls data:', JSON.stringify(data));
     await addCall(data);
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('POST /api/calls error:', error);
-    return NextResponse.json({ error: 'Failed to add call' }, { status: 500 });
+  } catch (error: any) {
+    console.error('POST /api/calls error:', error?.message || error);
+    return NextResponse.json({ error: error?.message || 'Failed to add call' }, { status: 500 });
   }
 }
