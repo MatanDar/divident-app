@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import {
@@ -56,12 +54,12 @@ export default function NewCallPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await addDoc(collection(db, 'calls'), {
-        ...form,
-        createdBy: user?.email,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+      const res = await fetch('/api/calls', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
       });
+      if (!res.ok) throw new Error('Failed');
       setSuccess(true);
       setTimeout(() => router.push('/'), 1500);
     } catch (err) {

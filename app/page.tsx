@@ -1,20 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  deleteDoc,
-  doc,
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { StatusBadge, PriorityBadge } from '@/components/StatusBadge';
-import { ServiceCall, CallStatus, CallPriority } from '@/lib/types';
+import { ServiceCall, CallStatus } from '@/lib/types';
 import Link from 'next/link';
 
 const STATUS_FILTER_OPTIONS: (CallStatus | 'הכל')[] = [
@@ -39,26 +30,33 @@ export default function HomePage() {
     if (!loading && !user) router.push('/login');
   }, [user, loading, router]);
 
-  useEffect(() => {
-    if (!user) return;
-    const q = query(collection(db, 'calls'), orderBy('createdAt', 'desc'));
-    const unsub = onSnapshot(q, (snap) => {
-      const data: ServiceCall[] = snap.docs.map((d) => ({
-        id: d.id,
-        ...(d.data() as Omit<ServiceCall, 'id'>),
-      }));
-      setCalls(data);
+  const fetchCalls = useCallback(async () => {
+    try {
+      const res = await fetch('/api/calls');
+      const data = await res.json();
+      setCalls(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Failed to load calls:', err);
+    } finally {
       setFetching(false);
-    });
-    return unsub;
-  }, [user]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) fetchCalls();
+  }, [user, fetchCalls]);
 
   const handleDelete = async (id: string) => {
     if (deleteConfirm !== id) {
       setDeleteConfirm(id);
       return;
     }
-    await deleteDoc(doc(db, 'calls', id));
+    try {
+      await fetch(`/api/calls/${id}`, { method: 'DELETE' });
+      setCalls((prev) => prev.filter((c) => c.id !== id));
+    } catch {
+      alert('שגיאה במחיקה');
+    }
     setDeleteConfirm(null);
   };
 
@@ -90,7 +88,7 @@ export default function HomePage() {
       <div className="min-h-screen bg-gray-50">
         <div className="h-14 bg-teal-800" />
         <div className="flex items-center justify-center h-64 text-teal-700 text-lg">
-          טוען קריאות...
+          טוען קריאות מ-Google Sheets...
         </div>
       </div>
     );
@@ -110,12 +108,14 @@ export default function HomePage() {
               {filtered.length !== calls.length && ` · ${filtered.length} מסוננות`}
             </p>
           </div>
-          <Link
-            href="/new-call"
-            className="inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm"
-          >
-            <span>+</span> קריאה חדשה
-          </Link>
+          <div className="flex gap-2">
+            <button onClick={fetchCalls} className="inline-flex items-center gap-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 px-4 py-2.5 rounded-lg text-sm transition-colors">
+              ↻ רענן
+            </button>
+            <Link href="/new-call" className="inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm">
+              + קריאה חדשה
+            </Link>
+          </div>
         </div>
 
         {/* Stats row */}

@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { CallStatus, CallPriority, DEVICE_TYPES, TECHNICIANS } from '@/lib/types';
@@ -41,20 +39,21 @@ export default function EditCallPage() {
   useEffect(() => {
     if (!params?.id) return;
     const load = async () => {
-      const snap = await getDoc(doc(db, 'calls', params.id as string));
-      if (snap.exists()) {
-        const d = snap.data();
+      const res = await fetch('/api/calls');
+      const calls = await res.json();
+      const call = calls.find((c: any) => c.id === params.id);
+      if (call) {
         setForm({
-          customerName: d.customerName || '',
-          customerNumber: d.customerNumber || '',
-          technician: d.technician || '',
-          status: d.status || 'בטיפול',
-          deviceType: d.deviceType || '',
-          description: d.description || '',
-          callNumber: d.callNumber || '',
-          visitDate: d.visitDate || '',
-          closingDate: d.closingDate || '',
-          priority: d.priority || 'רגיל',
+          customerName: call.customerName || '',
+          customerNumber: call.customerNumber || '',
+          technician: call.technician || '',
+          status: call.status || 'בטיפול',
+          deviceType: call.deviceType || '',
+          description: call.description || '',
+          callNumber: call.callNumber || '',
+          visitDate: call.visitDate || '',
+          closingDate: call.closingDate || '',
+          priority: call.priority || 'רגיל',
         });
       }
       setFetching(false);
@@ -72,11 +71,12 @@ export default function EditCallPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await updateDoc(doc(db, 'calls', params.id as string), {
-        ...form,
-        updatedAt: serverTimestamp(),
-        updatedBy: user?.email,
+      const res = await fetch(`/api/calls/${params.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
       });
+      if (!res.ok) throw new Error('Failed');
       setSuccess(true);
       setTimeout(() => router.push('/'), 1500);
     } catch (err) {

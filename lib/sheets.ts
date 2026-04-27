@@ -1,0 +1,121 @@
+import { google } from 'googleapis';
+
+const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_ID!;
+const SHEET_NAME = 'לוח ראשי';
+
+function getAuth() {
+  return new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    },
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
+}
+
+function rowToCall(row: string[], index: number) {
+  return {
+    id: String(index + 2), // row number in sheet (1=header, 2=first data row)
+    customerName: row[0] || '',
+    customerNumber: row[1] || '',
+    technician: row[2] || '',
+    status: row[3] || '',
+    deviceType: row[4] || '',
+    description: row[5] || '',
+    callNumber: row[6] || '',
+    visitDate: row[7] || '',
+    closingDate: row[8] || '',
+    priority: row[9] || 'רגיל',
+  };
+}
+
+export async function getCalls() {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${SHEET_NAME}!A:J`,
+  });
+
+  const rows = res.data.values || [];
+  if (rows.length <= 1) return [];
+
+  // Skip header row
+  return rows.slice(1).map((row, i) => rowToCall(row as string[], i));
+}
+
+export async function addCall(data: Record<string, string>) {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const values = [[
+    data.customerName || '',
+    data.customerNumber || '',
+    data.technician || '',
+    data.status || '',
+    data.deviceType || '',
+    data.description || '',
+    data.callNumber || '',
+    data.visitDate || '',
+    data.closingDate || '',
+    data.priority || 'רגיל',
+  ]];
+
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${SHEET_NAME}!A:J`,
+    valueInputOption: 'USER_ENTERED',
+    requestBody: { values },
+  });
+}
+
+export async function updateCall(rowNumber: number, data: Record<string, string>) {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const values = [[
+    data.customerName || '',
+    data.customerNumber || '',
+    data.technician || '',
+    data.status || '',
+    data.deviceType || '',
+    data.description || '',
+    data.callNumber || '',
+    data.visitDate || '',
+    data.closingDate || '',
+    data.priority || 'רגיל',
+  ]];
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${SHEET_NAME}!A${rowNumber}:J${rowNumber}`,
+    valueInputOption: 'USER_ENTERED',
+    requestBody: { values },
+  });
+}
+
+export async function deleteCall(rowNumber: number) {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId: SPREADSHEET_ID });
+  const sheet = spreadsheet.data.sheets?.find(s => s.properties?.title === SHEET_NAME);
+  const sheetId = sheet?.properties?.sheetId ?? 0;
+
+  await sheets.spreadsheets.batchUpdate({
+    spreadsheetId: SPREADSHEET_ID,
+    requestBody: {
+      requests: [{
+        deleteDimension: {
+          range: {
+            sheetId,
+            dimension: 'ROWS',
+            startIndex: rowNumber - 1,
+            endIndex: rowNumber,
+          },
+        },
+      }],
+    },
+  });
+}
