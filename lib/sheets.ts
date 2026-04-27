@@ -4,10 +4,16 @@ const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_ID!;
 const SHEET_NAME = 'לוח ראשי';
 
 function getAuth() {
+  const rawKey = process.env.GOOGLE_PRIVATE_KEY || '';
+  // Handle both escaped \n and real newlines, and strip surrounding quotes
+  const privateKey = rawKey
+    .replace(/^"+|"+$/g, '')   // remove surrounding quotes if any
+    .replace(/\\n/g, '\n');    // convert \n to real newlines
+
   return new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      private_key: privateKey,
     },
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
