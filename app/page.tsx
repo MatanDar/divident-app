@@ -4,17 +4,16 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
-import { StatusBadge, PriorityBadge } from '@/components/StatusBadge';
-import { ServiceCall, CallStatus } from '@/lib/types';
+import { StatusBadge } from '@/components/StatusBadge';
+import { ServiceCall } from '@/lib/types';
 import Link from 'next/link';
 
-const STATUS_FILTER_OPTIONS: (CallStatus | 'הכל')[] = [
+const STATUS_FILTER_OPTIONS = [
   'הכל',
-  'ממתין להספקת ציוד',
-  'להאם',
-  'בטיפול',
+  'ממתין להמשך טיפול',
+  'לתאם',
   'הושלם',
-  'בוטל',
+  'ממתין לחיוב',
 ];
 
 export default function HomePage() {
@@ -22,7 +21,7 @@ export default function HomePage() {
   const { user, loading } = useAuth();
   const [calls, setCalls] = useState<ServiceCall[]>([]);
   const [fetching, setFetching] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<CallStatus | 'הכל'>('הכל');
+  const [statusFilter, setStatusFilter] = useState('הכל');
   const [search, setSearch] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
@@ -65,7 +64,7 @@ export default function HomePage() {
     const matchSearch =
       !search ||
       c.customerName?.toLowerCase().includes(search.toLowerCase()) ||
-      c.callNumber?.toLowerCase().includes(search.toLowerCase()) ||
+      c.phone?.toLowerCase().includes(search.toLowerCase()) ||
       c.customerNumber?.toLowerCase().includes(search.toLowerCase()) ||
       c.deviceType?.toLowerCase().includes(search.toLowerCase());
     return matchStatus && matchSearch;
@@ -86,8 +85,8 @@ export default function HomePage() {
   if (loading || fetching) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <div className="h-14 bg-blue-800" />
-        <div className="flex items-center justify-center h-64 text-blue-700 text-lg">
+        <div className="h-14 bg-sky-800" />
+        <div className="flex items-center justify-center h-64 text-sky-700 text-lg">
           טוען קריאות מ-Google Sheets...
         </div>
       </div>
@@ -102,7 +101,7 @@ export default function HomePage() {
         {/* Header + stats */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-blue-800">לוח קריאות שירות</h1>
+            <h1 className="text-2xl font-bold text-sky-800">לוח קריאות שירות</h1>
             <p className="text-gray-500 text-sm mt-0.5">
               {calls.length} קריאות בסך הכל
               {filtered.length !== calls.length && ` · ${filtered.length} מסוננות`}
@@ -112,7 +111,7 @@ export default function HomePage() {
             <button onClick={fetchCalls} className="inline-flex items-center gap-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 px-4 py-2.5 rounded-lg text-sm transition-colors">
               ↻ רענן
             </button>
-            <Link href="/new-call" className="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm">
+            <Link href="/new-call" className="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white px-5 py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm">
               + קריאה חדשה
             </Link>
           </div>
@@ -121,9 +120,9 @@ export default function HomePage() {
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
-            { label: 'ממתין לציוד', value: calls.filter(c => c.status === 'ממתין להספקת ציוד').length, color: 'text-blue-600 bg-blue-50 border-blue-200' },
-            { label: 'בטיפול', value: calls.filter(c => c.status === 'בטיפול').length, color: 'text-orange-600 bg-orange-50 border-orange-200' },
-            { label: 'להאם', value: calls.filter(c => c.status === 'להאם').length, color: 'text-yellow-600 bg-yellow-50 border-yellow-200' },
+            { label: 'ממתין להמשך טיפול', value: calls.filter(c => c.status === 'ממתין להמשך טיפול').length, color: 'text-sky-700 bg-sky-50 border-sky-200' },
+            { label: 'לתאם', value: calls.filter(c => c.status === 'לתאם').length, color: 'text-yellow-600 bg-yellow-50 border-yellow-200' },
+            { label: 'ממתין לחיוב', value: calls.filter(c => c.status === 'ממתין לחיוב').length, color: 'text-orange-600 bg-orange-50 border-orange-200' },
             { label: 'הושלם', value: calls.filter(c => c.status === 'הושלם').length, color: 'text-green-600 bg-green-50 border-green-200' },
           ].map((stat) => (
             <div key={stat.label} className={`rounded-xl border p-4 ${stat.color}`}>
@@ -137,7 +136,7 @@ export default function HomePage() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-4 flex flex-col sm:flex-row gap-3">
           <input
             type="text"
-            placeholder="חיפוש לפי שם לקוח, מס׳ קריאה, מוצר..."
+            placeholder="חיפוש לפי שם לקוח, טלפון, מוצר..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
@@ -149,8 +148,8 @@ export default function HomePage() {
                 onClick={() => setStatusFilter(s)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                   statusFilter === s
-                    ? 'bg-blue-700 text-white border-blue-700'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400'
+                    ? 'bg-sky-600 text-white border-sky-600'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'
                 }`}
               >
                 {s}
@@ -164,13 +163,12 @@ export default function HomePage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-blue-800 text-white">
-                  <th className="text-right px-4 py-3 font-semibold">#</th>
+                <tr className="bg-sky-800 text-white">
                   <th className="text-right px-4 py-3 font-semibold">שם לקוח</th>
                   <th className="text-right px-4 py-3 font-semibold">מס׳ לקוח</th>
+                  <th className="text-right px-4 py-3 font-semibold">טלפון</th>
                   <th className="text-right px-4 py-3 font-semibold">מוצר</th>
                   <th className="text-right px-4 py-3 font-semibold">מצב</th>
-                  <th className="text-right px-4 py-3 font-semibold">עדיפות</th>
                   <th className="text-right px-4 py-3 font-semibold">טכנאי</th>
                   <th className="text-right px-4 py-3 font-semibold">תאריך ביקור</th>
                   <th className="text-right px-4 py-3 font-semibold">הערות</th>
@@ -180,16 +178,16 @@ export default function HomePage() {
               <tbody className="divide-y divide-gray-100">
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="text-center py-12 text-gray-400">
+                    <td colSpan={9} className="text-center py-12 text-gray-400">
                       {calls.length === 0 ? 'אין קריאות עדיין. לחץ "+ קריאה חדשה" כדי להתחיל.' : 'לא נמצאו קריאות מתאימות לסינון.'}
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((call, idx) => (
-                    <tr key={call.id} className="call-row transition-colors">
-                      <td className="px-4 py-3 text-gray-400 font-mono text-xs">{call.callNumber || idx + 1}</td>
+                  filtered.map((call) => (
+                    <tr key={call.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-3 font-medium text-gray-900">{call.customerName}</td>
                       <td className="px-4 py-3 text-gray-500">{call.customerNumber || '—'}</td>
+                      <td className="px-4 py-3 text-gray-600">{call.phone || '—'}</td>
                       <td className="px-4 py-3">
                         <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs font-medium">
                           {call.deviceType || '—'}
@@ -197,9 +195,6 @@ export default function HomePage() {
                       </td>
                       <td className="px-4 py-3">
                         <StatusBadge status={call.status} />
-                      </td>
-                      <td className="px-4 py-3">
-                        <PriorityBadge priority={call.priority} />
                       </td>
                       <td className="px-4 py-3 text-gray-600">{call.technician || '—'}</td>
                       <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">
@@ -214,7 +209,7 @@ export default function HomePage() {
                         <div className="flex gap-1 justify-end">
                           <Link
                             href={`/call/${call.id}`}
-                            className="text-xs px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded transition-colors"
+                            className="text-xs px-2 py-1 bg-sky-50 text-sky-700 hover:bg-sky-100 rounded transition-colors"
                           >
                             ערוך
                           </Link>

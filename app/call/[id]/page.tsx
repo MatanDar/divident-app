@@ -4,12 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
-import { CallStatus, CallPriority, DEVICE_TYPES, TECHNICIANS } from '@/lib/types';
+import { DEVICE_TYPES, TECHNICIANS } from '@/lib/types';
 
-const STATUSES: CallStatus[] = [
-  'ממתין להספקת ציוד', 'להאם', 'בטיפול', 'הושלם', 'בוטל',
-];
-const PRIORITIES: CallPriority[] = ['רגיל', 'ממתין', 'בדיקה', 'לאום', 'סגרי', 'אדום'];
+const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'הושלם', 'ממתין לחיוב'];
 
 export default function EditCallPage() {
   const router = useRouter();
@@ -22,14 +19,13 @@ export default function EditCallPage() {
   const [form, setForm] = useState({
     customerName: '',
     customerNumber: '',
+    phone: '',
     technician: '',
-    status: 'בטיפול' as CallStatus,
+    status: 'ממתין להמשך טיפול',
     deviceType: '',
     description: '',
-    callNumber: '',
     visitDate: '',
     closingDate: '',
-    priority: 'רגיל' as CallPriority,
   });
 
   useEffect(() => {
@@ -46,14 +42,13 @@ export default function EditCallPage() {
         setForm({
           customerName: call.customerName || '',
           customerNumber: call.customerNumber || '',
+          phone: call.phone || '',
           technician: call.technician || '',
-          status: call.status || 'בטיפול',
+          status: call.status || 'ממתין להמשך טיפול',
           deviceType: call.deviceType || '',
           description: call.description || '',
-          callNumber: call.callNumber || '',
           visitDate: call.visitDate || '',
           closingDate: call.closingDate || '',
-          priority: call.priority || 'רגיל',
         });
       }
       setFetching(false);
@@ -88,7 +83,7 @@ export default function EditCallPage() {
   };
 
   if (loading || fetching) {
-    return <div className="min-h-screen flex items-center justify-center text-blue-700">טוען...</div>;
+    return <div className="min-h-screen flex items-center justify-center text-sky-700">טוען...</div>;
   }
 
   return (
@@ -96,11 +91,11 @@ export default function EditCallPage() {
       <Navbar />
       <main className="max-w-3xl mx-auto px-4 py-8">
         <div className="mb-6 flex items-center gap-3">
-          <button onClick={() => router.push('/')} className="text-blue-600 hover:text-blue-800 text-sm">
+          <button onClick={() => router.push('/')} className="text-sky-600 hover:text-sky-800 text-sm">
             ← חזרה
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-blue-800">עריכת קריאה</h1>
+            <h1 className="text-2xl font-bold text-sky-800">עריכת קריאה</h1>
             <p className="text-gray-400 text-xs mt-0.5">#{params?.id}</p>
           </div>
         </div>
@@ -113,7 +108,7 @@ export default function EditCallPage() {
 
         <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
           <section>
-            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">פרטי לקוח</h2>
+            <h2 className="text-sm font-semibold text-sky-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">פרטי לקוח</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">שם לקוח *</label>
@@ -123,16 +118,16 @@ export default function EditCallPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">מספר לקוח</label>
                 <input name="customerNumber" value={form.customerNumber} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">טלפון</label>
+                <input name="phone" value={form.phone} onChange={handleChange} placeholder="מספר טלפון" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+              </div>
             </div>
           </section>
 
           <section>
-            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">פרטי קריאה</h2>
+            <h2 className="text-sm font-semibold text-sky-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">פרטי קריאה</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">מספר קריאה</label>
-                <input name="callNumber" value={form.callNumber} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
-              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">סוג מוצר/התקן</label>
                 <select name="deviceType" value={form.deviceType} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white">
@@ -147,12 +142,6 @@ export default function EditCallPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">עדיפות</label>
-                <select name="priority" value={form.priority} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white">
-                  {PRIORITIES.map(p => <option key={p} value={p}>{p}</option>)}
-                </select>
-              </div>
-              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">טכנאי</label>
                 <select name="technician" value={form.technician} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white">
                   <option value="">בחר טכנאי...</option>
@@ -163,7 +152,7 @@ export default function EditCallPage() {
           </section>
 
           <section>
-            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">תאריכים</h2>
+            <h2 className="text-sm font-semibold text-sky-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">תאריכים</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">תאריך ביקור</label>
@@ -177,12 +166,12 @@ export default function EditCallPage() {
           </section>
 
           <section>
-            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">תיאור / הערות</h2>
+            <h2 className="text-sm font-semibold text-sky-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">תיאור / הערות</h2>
             <textarea name="description" value={form.description} onChange={handleChange} rows={4} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-y" />
           </section>
 
           <div className="flex gap-3 pt-2">
-            <button type="submit" disabled={saving} className="flex-1 bg-blue-700 hover:bg-blue-600 disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
+            <button type="submit" disabled={saving} className="flex-1 bg-sky-600 hover:bg-sky-500 disabled:bg-sky-300 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
               {saving ? 'שומר...' : 'עדכן קריאה'}
             </button>
             <button type="button" onClick={() => router.push('/')} className="px-6 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 rounded-lg transition-colors text-sm">

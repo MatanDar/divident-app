@@ -22,15 +22,15 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="bg-blue-800 text-white shadow-lg">
+    <header className="bg-sky-800 text-white shadow-lg">
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo + Title */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center">
-            <span className="text-blue-800 font-bold text-sm">D</span>
+            <span className="text-sky-800 font-bold text-sm">D</span>
           </div>
           <span className="text-xl font-bold tracking-wide">DIVIDENT</span>
-          <span className="text-blue-300 text-sm hidden sm:block">מערכת קריאות שירות</span>
+          <span className="text-sky-300 text-sm hidden sm:block">מערכת קריאות שירות</span>
         </div>
 
         {/* Nav links */}
@@ -41,8 +41,8 @@ export default function Navbar() {
               href={link.href}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 pathname === link.href
-                  ? 'bg-blue-600 text-white'
-                  : 'text-blue-100 hover:bg-blue-700'
+                  ? 'bg-sky-600 text-white'
+                  : 'text-sky-100 hover:bg-sky-700'
               }`}
             >
               {link.label}
@@ -53,13 +53,13 @@ export default function Navbar() {
         {/* User + logout */}
         <div className="flex items-center gap-3">
           {user && (
-            <span className="text-blue-200 text-xs hidden md:block truncate max-w-[160px]">
+            <span className="text-sky-200 text-xs hidden md:block truncate max-w-[160px]">
               {user.email}
             </span>
           )}
           <button
             onClick={handleLogout}
-            className="text-sm bg-blue-700 hover:bg-blue-600 px-3 py-1.5 rounded-md transition-colors"
+            className="text-sm bg-sky-700 hover:bg-sky-600 px-3 py-1.5 rounded-md transition-colors"
           >
             יציאה
           </button>

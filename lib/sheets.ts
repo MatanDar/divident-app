@@ -24,14 +24,14 @@ function rowToCall(row: string[], index: number) {
     id: String(index + 2), // row number in sheet (1=header, 2=first data row)
     customerName: row[0] || '',
     customerNumber: row[1] || '',
-    technician: row[2] || '',
+    phone: row[2] || '',
     status: row[3] || '',
     deviceType: row[4] || '',
     description: row[5] || '',
-    callNumber: row[6] || '',
+    technician: row[6] || '',
     visitDate: row[7] || '',
     closingDate: row[8] || '',
-    priority: row[9] || 'רגיל',
+    priority: row[9] || '',
   };
 }
 
@@ -58,14 +58,14 @@ export async function addCall(data: Record<string, string>) {
   const values = [[
     data.customerName || '',
     data.customerNumber || '',
-    data.technician || '',
+    data.phone || '',
     data.status || '',
     data.deviceType || '',
     data.description || '',
-    data.callNumber || '',
+    data.technician || '',
     data.visitDate || '',
     data.closingDate || '',
-    data.priority || 'רגיל',
+    data.priority || '',
   ]];
 
   await sheets.spreadsheets.values.append({
@@ -83,14 +83,14 @@ export async function updateCall(rowNumber: number, data: Record<string, string>
   const values = [[
     data.customerName || '',
     data.customerNumber || '',
-    data.technician || '',
+    data.phone || '',
     data.status || '',
     data.deviceType || '',
     data.description || '',
-    data.callNumber || '',
+    data.technician || '',
     data.visitDate || '',
     data.closingDate || '',
-    data.priority || 'רגיל',
+    data.priority || '',
   ]];
 
   await sheets.spreadsheets.values.update({

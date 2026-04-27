@@ -33,14 +33,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-sky-900 to-sky-700 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-blue-700 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-sky-700 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-2xl">D</span>
           </div>
-          <h1 className="text-2xl font-bold text-blue-800">DIVIDENT</h1>
+          <h1 className="text-2xl font-bold text-sky-800">DIVIDENT</h1>
           <p className="text-gray-500 text-sm mt-1">מערכת ניהול קריאות שירות</p>
         </div>
 
@@ -55,7 +55,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="example@divident.com"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
 
@@ -69,7 +69,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
 
@@ -82,7 +82,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-700 hover:bg-blue-600 disabled:bg-blue-400 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
+            className="w-full bg-sky-700 hover:bg-sky-600 disabled:bg-sky-400 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
           >
             {loading ? 'מתחבר...' : 'כניסה למערכת'}
           </button>

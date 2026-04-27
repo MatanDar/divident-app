@@ -1,49 +1,30 @@
 export type CallStatus =
-  | 'ממתין להספקת ציוד'
-  | 'להאם'
-  | 'בטיפול'
+  | 'ממתין להמשך טיפול'
+  | 'לתאם'
   | 'הושלם'
-  | 'בוטל';
-
-export type CallPriority =
-  | 'אדום'
-  | 'סגרי'
-  | 'בדיקה'
-  | 'ממתין'
-  | 'לאום'
-  | 'רגיל';
+  | 'ממתין לחיוב';
 
 export interface ServiceCall {
   id?: string;
   customerName: string;
   customerNumber: string;
+  phone: string;
   technician: string;
-  status: CallStatus;
+  status: CallStatus | string;
   deviceType: string;
   description: string;
-  callNumber: string;
   visitDate?: string | null;
   closingDate?: string | null;
-  priority: CallPriority;
+  priority?: string;
   createdAt?: string;
   updatedAt?: string;
 }
 
-export const STATUS_COLORS: Record<CallStatus, string> = {
-  'ממתין להספקת ציוד': 'bg-blue-100 text-blue-800 border-blue-300',
-  'להאם': 'bg-yellow-100 text-yellow-800 border-yellow-300',
-  'בטיפול': 'bg-orange-100 text-orange-800 border-orange-300',
+export const STATUS_COLORS: Record<string, string> = {
+  'ממתין להמשך טיפול': 'bg-sky-100 text-sky-800 border-sky-300',
+  'לתאם': 'bg-yellow-100 text-yellow-800 border-yellow-300',
   'הושלם': 'bg-green-100 text-green-800 border-green-300',
-  'בוטל': 'bg-gray-100 text-gray-600 border-gray-300',
-};
-
-export const PRIORITY_COLORS: Record<CallPriority, string> = {
-  'אדום': 'bg-red-500 text-white',
-  'סגרי': 'bg-orange-500 text-white',
-  'בדיקה': 'bg-purple-500 text-white',
-  'ממתין': 'bg-yellow-400 text-yellow-900',
-  'לאום': 'bg-blue-500 text-white',
-  'רגיל': 'bg-gray-400 text-white',
+  'ממתין לחיוב': 'bg-orange-100 text-orange-800 border-orange-300',
 };
 
 export const DEVICE_TYPES = [

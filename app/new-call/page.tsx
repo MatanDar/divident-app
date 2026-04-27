@@ -4,22 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
-import {
-  CallStatus,
-  CallPriority,
-  DEVICE_TYPES,
-  TECHNICIANS,
-} from '@/lib/types';
+import { DEVICE_TYPES, TECHNICIANS } from '@/lib/types';
 
-const STATUSES: CallStatus[] = [
-  'ממתין להספקת ציוד',
-  'להאם',
-  'בטיפול',
-  'הושלם',
-  'בוטל',
-];
-
-const PRIORITIES: CallPriority[] = ['רגיל', 'ממתין', 'בדיקה', 'לאום', 'סגרי', 'אדום'];
+const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'הושלם', 'ממתין לחיוב'];
 
 export default function NewCallPage() {
   const router = useRouter();
@@ -30,14 +17,13 @@ export default function NewCallPage() {
   const [form, setForm] = useState({
     customerName: '',
     customerNumber: '',
+    phone: '',
     technician: '',
-    status: 'בטיפול' as CallStatus,
+    status: 'ממתין להמשך טיפול',
     deviceType: '',
     description: '',
-    callNumber: '',
     visitDate: '',
     closingDate: '',
-    priority: 'רגיל' as CallPriority,
   });
 
   useEffect(() => {
@@ -70,7 +56,7 @@ export default function NewCallPage() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-blue-700">טוען...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-sky-700">טוען...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -78,7 +64,7 @@ export default function NewCallPage() {
 
       <main className="max-w-3xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-blue-800">קריאה חדשה</h1>
+          <h1 className="text-2xl font-bold text-sky-800">קריאה חדשה</h1>
           <p className="text-gray-500 text-sm mt-1">מלא את הפרטים לפתיחת קריאת שירות חדשה</p>
         </div>
 
@@ -90,9 +76,8 @@ export default function NewCallPage() {
 
         <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
 
-          {/* Section: Customer details */}
           <section>
-            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
+            <h2 className="text-sm font-semibold text-sky-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
               פרטי לקוח
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -117,25 +102,24 @@ export default function NewCallPage() {
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
                 />
               </div>
-            </div>
-          </section>
-
-          {/* Section: Call details */}
-          <section>
-            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
-              פרטי קריאה
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">מספר קריאה</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">טלפון</label>
                 <input
-                  name="callNumber"
-                  value={form.callNumber}
+                  name="phone"
+                  value={form.phone}
                   onChange={handleChange}
-                  placeholder="מס׳ קריאה"
+                  placeholder="מספר טלפון"
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
                 />
               </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-sm font-semibold text-sky-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
+              פרטי קריאה
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">סוג מוצר/התקן *</label>
                 <select
@@ -165,19 +149,6 @@ export default function NewCallPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">עדיפות</label>
-                <select
-                  name="priority"
-                  value={form.priority}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
-                >
-                  {PRIORITIES.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">טכנאי</label>
                 <select
                   name="technician"
@@ -194,9 +165,8 @@ export default function NewCallPage() {
             </div>
           </section>
 
-          {/* Section: Dates */}
           <section>
-            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
+            <h2 className="text-sm font-semibold text-sky-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
               תאריכים
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -223,9 +193,8 @@ export default function NewCallPage() {
             </div>
           </section>
 
-          {/* Description */}
           <section>
-            <h2 className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
+            <h2 className="text-sm font-semibold text-sky-700 uppercase tracking-wide mb-4 border-b border-gray-100 pb-2">
               תיאור / הערות
             </h2>
             <textarea
@@ -238,12 +207,11 @@ export default function NewCallPage() {
             />
           </section>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-2">
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-blue-700 hover:bg-blue-600 disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+              className="flex-1 bg-sky-600 hover:bg-sky-500 disabled:bg-sky-300 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
             >
               {saving ? 'שומר...' : 'שמור קריאה'}
             </button>
