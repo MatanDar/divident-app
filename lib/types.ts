@@ -29,10 +29,22 @@ export const STATUS_COLORS: Record<string, string> = {
 
 export const DEVICE_TYPES = [
   'PRIMESCAN AC',
+  'PRIMESCAN 2',
+  'PRIMESCAN CONNECT',
+  'INBOX',
+  'OMNICAM AC',
+  'Primemill',
+  'INLAB SW',
+  'INLAB MCX',
   'INLAB MC XL',
   'INLAB MC X5',
-  'Speed Fire',
-  'Sidekix',
+  'INLAB PROFIRE',
+  'Vacuum',
+  'DAC Universal',
+  'Heliodent',
+  'Sidexis',
+  'Unit',
+  'Axeos',
   'אחר',
 ];
 
