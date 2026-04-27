@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { StatusBadge } from '@/components/StatusBadge';
-import { ServiceCall } from '@/lib/types';
+import { ServiceCall, TECHNICIANS } from '@/lib/types';
 import Link from 'next/link';
 
 const STATUS_FILTER_OPTIONS = [
@@ -22,6 +22,7 @@ export default function HomePage() {
   const [calls, setCalls] = useState<ServiceCall[]>([]);
   const [fetching, setFetching] = useState(true);
   const [statusFilter, setStatusFilter] = useState('הכל');
+  const [technicianFilter, setTechnicianFilter] = useState('הכל');
   const [search, setSearch] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
@@ -61,13 +62,14 @@ export default function HomePage() {
 
   const filtered = calls.filter((c) => {
     const matchStatus = statusFilter === 'הכל' || c.status === statusFilter;
+    const matchTechnician = technicianFilter === 'הכל' || c.technician === technicianFilter;
     const matchSearch =
       !search ||
       c.customerName?.toLowerCase().includes(search.toLowerCase()) ||
       c.phone?.toLowerCase().includes(search.toLowerCase()) ||
       c.customerNumber?.toLowerCase().includes(search.toLowerCase()) ||
       c.deviceType?.toLowerCase().includes(search.toLowerCase());
-    return matchStatus && matchSearch;
+    return matchStatus && matchTechnician && matchSearch;
   });
 
   const formatDate = (d?: string | null) => {
@@ -98,7 +100,7 @@ export default function HomePage() {
       <Navbar />
 
       <main className="max-w-screen-xl mx-auto px-4 py-6">
-        {/* Header + stats */}
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-bold text-sky-800">לוח קריאות שירות</h1>
@@ -133,15 +135,20 @@ export default function HomePage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-4 flex flex-col sm:flex-row gap-3">
-          <input
-            type="text"
-            placeholder="חיפוש לפי שם לקוח, טלפון, מוצר..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
-          />
-          <div className="flex gap-2 flex-wrap">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-4 flex flex-col gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              placeholder="חיפוש לפי שם לקוח, טלפון, מוצר..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            />
+          </div>
+
+          {/* Status filter */}
+          <div className="flex gap-2 flex-wrap items-center">
+            <span className="text-xs text-gray-500 font-medium">מצב:</span>
             {STATUS_FILTER_OPTIONS.map((s) => (
               <button
                 key={s}
@@ -153,6 +160,34 @@ export default function HomePage() {
                 }`}
               >
                 {s}
+              </button>
+            ))}
+          </div>
+
+          {/* Technician filter */}
+          <div className="flex gap-2 flex-wrap items-center">
+            <span className="text-xs text-gray-500 font-medium">טכנאי:</span>
+            <button
+              onClick={() => setTechnicianFilter('הכל')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                technicianFilter === 'הכל'
+                  ? 'bg-sky-600 text-white border-sky-600'
+                  : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'
+              }`}
+            >
+              הכל
+            </button>
+            {TECHNICIANS.map((t) => (
+              <button
+                key={t}
+                onClick={() => setTechnicianFilter(t)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                  technicianFilter === t
+                    ? 'bg-sky-600 text-white border-sky-600'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'
+                }`}
+              >
+                {t}
               </button>
             ))}
           </div>
