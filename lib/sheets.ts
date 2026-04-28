@@ -57,6 +57,22 @@ export async function addCall(data: Record<string, string>) {
   const auth = getAuth();
   const sheets = google.sheets({ version: 'v4', auth });
 
+  // Read all rows to find the last row that actually has data
+  const existing = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${SHEET_NAME}!A:J`,
+  });
+
+  const rows = existing.data.values || [];
+  // Find the last row index with any non-empty cell
+  let lastDataRow = 0;
+  for (let i = 0; i < rows.length; i++) {
+    if (rows[i].some((cell: string) => cell && cell.toString().trim() !== '')) {
+      lastDataRow = i;
+    }
+  }
+  const nextRow = lastDataRow + 2; // +1 for 0-index to 1-index, +1 for next row
+
   const values = [[
     data.customerName || '',
     data.customerNumber || '',
@@ -70,11 +86,10 @@ export async function addCall(data: Record<string, string>) {
     data.priority || '',
   ]];
 
-  await sheets.spreadsheets.values.append({
+  await sheets.spreadsheets.values.update({
     spreadsheetId: SPREADSHEET_ID,
-    range: `${SHEET_NAME}!A1`,
+    range: `${SHEET_NAME}!A${nextRow}:J${nextRow}`,
     valueInputOption: 'USER_ENTERED',
-    insertDataOption: 'INSERT_ROWS',
     requestBody: { values },
   });
 }
