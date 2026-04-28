@@ -157,14 +157,14 @@ function HushlimuContent() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-sky-800 text-white">
-                  <th className="text-right px-4 py-3 font-semibold">שם לקוח</th>
-                  <th className="text-right px-4 py-3 font-semibold">מס׳ לקוח</th>
-                  <th className="text-right px-4 py-3 font-semibold">טלפון</th>
-                  <th className="text-right px-4 py-3 font-semibold">מוצר</th>
-                  <th className="text-right px-4 py-3 font-semibold">מצב</th>
-                  <th className="text-right px-4 py-3 font-semibold">טכנאי</th>
-                  <th className="text-right px-4 py-3 font-semibold">תאריך ביקור</th>
-                  <th className="text-right px-4 py-3 font-semibold">הערות</th>
+                  <th className="text-right px-4 py-3 font-semibold whitespace-nowrap">שם לקוח</th>
+                  <th className="text-right px-4 py-3 font-semibold whitespace-nowrap">מס׳ לקוח</th>
+                  <th className="text-right px-4 py-3 font-semibold whitespace-nowrap">טלפון</th>
+                  <th className="text-right px-4 py-3 font-semibold whitespace-nowrap">מוצר</th>
+                  <th className="text-right px-4 py-3 font-semibold whitespace-nowrap">מצב</th>
+                  <th className="text-right px-4 py-3 font-semibold whitespace-nowrap">טכנאי</th>
+                  <th className="text-right px-4 py-3 font-semibold whitespace-nowrap">תאריך ביקור</th>
+                  <th className="text-right px-4 py-3 font-semibold whitespace-nowrap">הערות</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
@@ -185,16 +185,16 @@ function HushlimuContent() {
                         ref={isLast ? lastRowRef : undefined}
                         className={`transition-colors ${isNew ? 'bg-green-50' : 'hover:bg-gray-50'}`}
                       >
-                        <td className="px-4 py-3 font-medium text-gray-900">{call.customerName}</td>
-                        <td className="px-4 py-3 text-gray-500">{call.customerNumber || '—'}</td>
-                        <td className="px-4 py-3 text-gray-600">{call.phone || '—'}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{call.customerName}</td>
+                        <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{call.customerNumber || '—'}</td>
+                        <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{call.phone || '—'}</td>
+                        <td className="px-4 py-3 whitespace-nowrap">
                           <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs font-medium">
                             {call.deviceType || '—'}
                           </span>
                         </td>
-                        <td className="px-4 py-3"><StatusBadge status={call.status} /></td>
-                        <td className="px-4 py-3 text-gray-600">{call.technician || '—'}</td>
+                        <td className="px-4 py-3 whitespace-nowrap"><StatusBadge status={call.status} /></td>
+                        <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{call.technician || '—'}</td>
                         <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">{formatDate(call.visitDate)}</td>
                         <td className="px-4 py-3 text-gray-500 max-w-[200px]">
                           <p className="truncate text-xs" title={call.description}>{call.description || '—'}</p>
