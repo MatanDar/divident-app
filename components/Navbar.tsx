@@ -26,10 +26,7 @@ export default function Navbar() {
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo + Title */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center">
-            <span className="text-sky-800 font-bold text-sm">D</span>
-          </div>
-          <span className="text-xl font-bold tracking-wide">DIVIDENT</span>
+          <img src="/logo.jpg" alt="DIVIDENT" className="h-9 w-auto" />
           <span className="text-sky-300 text-sm hidden sm:block">מערכת קריאות שירות</span>
         </div>
 

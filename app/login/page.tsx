@@ -37,10 +37,7 @@ export default function LoginPage() {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-sky-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">D</span>
-          </div>
-          <h1 className="text-2xl font-bold text-sky-800">DIVIDENT</h1>
+          <img src="/logo.jpg" alt="DIVIDENT" className="h-24 w-auto mx-auto mb-4" />
           <p className="text-gray-500 text-sm mt-1">מערכת ניהול קריאות שירות</p>
         </div>
 
