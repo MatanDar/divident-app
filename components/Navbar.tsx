@@ -18,6 +18,8 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'לוח ראשי' },
+    { href: '/lachiyuv', label: 'לחיוב' },
+    { href: '/hushlimu', label: 'הושלמו' },
     { href: '/new-call', label: '+ קריאה חדשה' },
   ];
 
