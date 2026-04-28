@@ -26,7 +26,9 @@ export default function Navbar() {
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo + Title */}
         <div className="flex items-center gap-3">
-          <img src="/logo.jpg" alt="DIVIDENT" className="h-9 w-auto" />
+          <div className="bg-white rounded-lg px-2 py-1">
+            <img src="/logo.jpg" alt="DIVIDENT" className="h-8 w-auto" />
+          </div>
           <span className="text-sky-300 text-sm hidden sm:block">מערכת קריאות שירות</span>
         </div>
 

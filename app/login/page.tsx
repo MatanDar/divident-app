@@ -33,40 +33,46 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-900 to-sky-700 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-        {/* Logo */}
+    <div
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{
+        backgroundImage: 'url(/logo.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" />
+
+      {/* Login card */}
+      <div className="relative z-10 bg-white/85 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/60">
         <div className="text-center mb-8">
-          <img src="/logo.jpg" alt="DIVIDENT" className="h-24 w-auto mx-auto mb-4" />
-          <p className="text-gray-500 text-sm mt-1">מערכת ניהול קריאות שירות</p>
+          <p className="text-sky-800 font-bold text-xl">מערכת ניהול קריאות שירות</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              אימייל
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">אימייל</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="example@divident.com"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-white/90"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              סיסמה
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">סיסמה</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-white/90"
             />
           </div>
 
