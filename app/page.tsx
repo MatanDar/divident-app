@@ -89,7 +89,7 @@ function HomeContent() {
 
   const filtered = calls.filter((c) => {
     const matchStatus = statusFilter === 'הכל' || c.status === statusFilter;
-    const matchTechnician = technicianFilter === 'הכל' || c.technician === technicianFilter;
+    const matchTechnician = technicianFilter === 'הכל' || (c.technician || '').includes(technicianFilter);
     const matchSearch =
       !search ||
       c.customerName?.toLowerCase().includes(search.toLowerCase()) ||

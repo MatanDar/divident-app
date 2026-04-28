@@ -77,7 +77,7 @@ function LachiyuvContent() {
   };
 
   const filtered = calls.filter((c) => {
-    const matchTechnician = technicianFilter === 'הכל' || c.technician === technicianFilter;
+    const matchTechnician = technicianFilter === 'הכל' || (c.technician || '').includes(technicianFilter);
     const matchSearch =
       !search ||
       c.customerName?.toLowerCase().includes(search.toLowerCase()) ||
