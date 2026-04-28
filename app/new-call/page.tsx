@@ -50,7 +50,7 @@ export default function NewCallPage() {
         throw new Error(body.error || `HTTP ${res.status}`);
       }
       setSuccess(true);
-      setTimeout(() => router.push('/'), 1500);
+      setTimeout(() => router.push('/?added=1'), 1500);
     } catch (err: any) {
       console.error(err);
       alert(`שגיאה בשמירה: ${err.message}`);

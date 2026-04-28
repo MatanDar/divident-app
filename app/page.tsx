@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback, useRef, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { StatusBadge } from '@/components/StatusBadge';
@@ -16,8 +16,24 @@ const STATUS_FILTER_OPTIONS = [
   'ממתין לחיוב',
 ];
 
-export default function HomePage() {
+function formatDate(d?: string | null): string {
+  if (!d) return '—';
+  // Try to parse as ISO / standard format
+  const date = new Date(d);
+  if (!isNaN(date.getTime())) {
+    return date.toLocaleDateString('he-IL', {
+      day: '2-digit', month: '2-digit', year: '2-digit',
+      hour: '2-digit', minute: '2-digit',
+    });
+  }
+  // Return as-is if can't parse (e.g. already formatted Hebrew date from sheet)
+  return d;
+}
+
+function HomeContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const justAdded = searchParams.get('added') === '1';
   const { user, loading } = useAuth();
   const [calls, setCalls] = useState<ServiceCall[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -25,6 +41,7 @@ export default function HomePage() {
   const [technicianFilter, setTechnicianFilter] = useState('הכל');
   const [search, setSearch] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const lastRowRef = useRef<HTMLTableRowElement>(null);
 
   useEffect(() => {
     if (!loading && !user) router.push('/login');
@@ -45,6 +62,15 @@ export default function HomePage() {
   useEffect(() => {
     if (user) fetchCalls();
   }, [user, fetchCalls]);
+
+  // Scroll to last row when returning from new-call
+  useEffect(() => {
+    if (justAdded && !fetching && lastRowRef.current) {
+      setTimeout(() => {
+        lastRowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+  }, [justAdded, fetching]);
 
   const handleDelete = async (id: string) => {
     if (deleteConfirm !== id) {
@@ -72,18 +98,6 @@ export default function HomePage() {
     return matchStatus && matchTechnician && matchSearch;
   });
 
-  const formatDate = (d?: string | null) => {
-    if (!d) return '—';
-    try {
-      return new Date(d).toLocaleDateString('he-IL', {
-        day: '2-digit', month: '2-digit', year: '2-digit',
-        hour: '2-digit', minute: '2-digit',
-      });
-    } catch {
-      return d;
-    }
-  };
-
   if (loading || fetching) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -100,7 +114,12 @@ export default function HomePage() {
       <Navbar />
 
       <main className="max-w-screen-xl mx-auto px-4 py-6">
-        {/* Header */}
+        {justAdded && (
+          <div className="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg mb-4 text-sm font-medium">
+            ✓ הקריאה נוספה בהצלחה — מוצגת בתחתית הרשימה
+          </div>
+        )}
+
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-bold text-sky-800">לוח קריאות שירות</h1>
@@ -119,7 +138,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Stats row */}
+        {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
             { label: 'ממתין להמשך טיפול', value: calls.filter(c => c.status === 'ממתין להמשך טיפול').length, color: 'text-sky-700 bg-sky-50 border-sky-200' },
@@ -136,57 +155,31 @@ export default function HomePage() {
 
         {/* Filters */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-4 flex flex-col gap-3">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <input
-              type="text"
-              placeholder="חיפוש לפי שם לקוח, טלפון, מוצר..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
-            />
-          </div>
-
-          {/* Status filter */}
+          <input
+            type="text"
+            placeholder="חיפוש לפי שם לקוח, טלפון, מוצר..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-80"
+          />
           <div className="flex gap-2 flex-wrap items-center">
             <span className="text-xs text-gray-500 font-medium">מצב:</span>
             {STATUS_FILTER_OPTIONS.map((s) => (
-              <button
-                key={s}
-                onClick={() => setStatusFilter(s)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                  statusFilter === s
-                    ? 'bg-sky-600 text-white border-sky-600'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'
-                }`}
-              >
+              <button key={s} onClick={() => setStatusFilter(s)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${statusFilter === s ? 'bg-sky-600 text-white border-sky-600' : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'}`}>
                 {s}
               </button>
             ))}
           </div>
-
-          {/* Technician filter */}
           <div className="flex gap-2 flex-wrap items-center">
             <span className="text-xs text-gray-500 font-medium">טכנאי:</span>
-            <button
-              onClick={() => setTechnicianFilter('הכל')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                technicianFilter === 'הכל'
-                  ? 'bg-sky-600 text-white border-sky-600'
-                  : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'
-              }`}
-            >
+            <button onClick={() => setTechnicianFilter('הכל')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${technicianFilter === 'הכל' ? 'bg-sky-600 text-white border-sky-600' : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'}`}>
               הכל
             </button>
             {TECHNICIANS.map((t) => (
-              <button
-                key={t}
-                onClick={() => setTechnicianFilter(t)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                  technicianFilter === t
-                    ? 'bg-sky-600 text-white border-sky-600'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'
-                }`}
-              >
+              <button key={t} onClick={() => setTechnicianFilter(t)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${technicianFilter === t ? 'bg-sky-600 text-white border-sky-600' : 'bg-white text-gray-600 border-gray-300 hover:border-sky-400'}`}>
                 {t}
               </button>
             ))}
@@ -218,50 +211,44 @@ export default function HomePage() {
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((call) => (
-                    <tr key={call.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3 font-medium text-gray-900">{call.customerName}</td>
-                      <td className="px-4 py-3 text-gray-500">{call.customerNumber || '—'}</td>
-                      <td className="px-4 py-3 text-gray-600">{call.phone || '—'}</td>
-                      <td className="px-4 py-3">
-                        <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs font-medium">
-                          {call.deviceType || '—'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <StatusBadge status={call.status} />
-                      </td>
-                      <td className="px-4 py-3 text-gray-600">{call.technician || '—'}</td>
-                      <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">
-                        {formatDate(call.visitDate)}
-                      </td>
-                      <td className="px-4 py-3 text-gray-500 max-w-[200px]">
-                        <p className="truncate text-xs" title={call.description}>
-                          {call.description || '—'}
-                        </p>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex gap-1 justify-end">
-                          <Link
-                            href={`/call/${call.id}`}
-                            className="text-xs px-2 py-1 bg-sky-50 text-sky-700 hover:bg-sky-100 rounded transition-colors"
-                          >
-                            ערוך
-                          </Link>
-                          <button
-                            onClick={() => handleDelete(call.id!)}
-                            className={`text-xs px-2 py-1 rounded transition-colors ${
-                              deleteConfirm === call.id
-                                ? 'bg-red-500 text-white'
-                                : 'bg-red-50 text-red-600 hover:bg-red-100'
-                            }`}
-                          >
-                            {deleteConfirm === call.id ? 'בטוח?' : 'מחק'}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                  filtered.map((call, idx) => {
+                    const isLast = idx === filtered.length - 1;
+                    const isNew = justAdded && isLast;
+                    return (
+                      <tr
+                        key={call.id}
+                        ref={isLast ? lastRowRef : undefined}
+                        className={`transition-colors ${isNew ? 'bg-green-50' : 'hover:bg-gray-50'}`}
+                      >
+                        <td className="px-4 py-3 font-medium text-gray-900">{call.customerName}</td>
+                        <td className="px-4 py-3 text-gray-500">{call.customerNumber || '—'}</td>
+                        <td className="px-4 py-3 text-gray-600">{call.phone || '—'}</td>
+                        <td className="px-4 py-3">
+                          <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs font-medium">
+                            {call.deviceType || '—'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3"><StatusBadge status={call.status} /></td>
+                        <td className="px-4 py-3 text-gray-600">{call.technician || '—'}</td>
+                        <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">{formatDate(call.visitDate)}</td>
+                        <td className="px-4 py-3 text-gray-500 max-w-[200px]">
+                          <p className="truncate text-xs" title={call.description}>{call.description || '—'}</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex gap-1 justify-end">
+                            <Link href={`/call/${call.id}`}
+                              className="text-xs px-2 py-1 bg-sky-50 text-sky-700 hover:bg-sky-100 rounded transition-colors">
+                              ערוך
+                            </Link>
+                            <button onClick={() => handleDelete(call.id!)}
+                              className={`text-xs px-2 py-1 rounded transition-colors ${deleteConfirm === call.id ? 'bg-red-500 text-white' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}>
+                              {deleteConfirm === call.id ? 'בטוח?' : 'מחק'}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -273,5 +260,13 @@ export default function HomePage() {
         </p>
       </main>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
   );
 }

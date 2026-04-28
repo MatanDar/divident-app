@@ -47,8 +47,10 @@ export async function getCalls() {
   const rows = res.data.values || [];
   if (rows.length <= 1) return [];
 
-  // Skip header row
-  return rows.slice(1).map((row, i) => rowToCall(row as string[], i));
+  // Skip header row, filter out empty rows
+  return rows.slice(1)
+    .map((row, i) => rowToCall(row as string[], i))
+    .filter(call => call.customerName.trim() !== '');
 }
 
 export async function addCall(data: Record<string, string>) {
