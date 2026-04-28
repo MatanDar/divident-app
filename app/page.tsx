@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import { StatusBadge } from '@/components/StatusBadge';
 import { ServiceCall, TECHNICIANS } from '@/lib/types';
 import Link from 'next/link';
+import BottomTabs from '@/components/BottomTabs';
 
 const STATUS_FILTER_OPTIONS = [
   'הכל',
@@ -113,7 +114,7 @@ function HomeContent() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <main className="max-w-screen-xl mx-auto px-4 py-6">
+      <main className="max-w-screen-xl mx-auto px-4 py-6 pb-24">
         {justAdded && (
           <div className="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg mb-4 text-sm font-medium">
             ✓ הקריאה נוספה בהצלחה — מוצגת בתחתית הרשימה
@@ -255,10 +256,11 @@ function HomeContent() {
           </div>
         </div>
 
-        <p className="text-xs text-gray-400 text-center mt-4">
+        <p className="text-xs text-gray-400 text-center mt-4 mb-2">
           DIVIDENT · מערכת ניהול קריאות שירות
         </p>
       </main>
+      <BottomTabs />
     </div>
   );
 }
