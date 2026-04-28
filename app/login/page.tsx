@@ -33,23 +33,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{
-        backgroundImage: 'url(/logo.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" />
+    <div className="min-h-screen bg-gradient-to-br from-sky-900 to-sky-700 flex flex-col items-center justify-center p-4 gap-6">
+
+      {/* Logo - natural size, not stretched */}
+      <img
+        src="/logo.jpg"
+        alt="DIVIDENT"
+        className="w-64 h-64 object-contain rounded-2xl shadow-xl"
+      />
 
       {/* Login card */}
-      <div className="relative z-10 bg-white/85 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/60">
-        <div className="text-center mb-8">
-          <p className="text-sky-800 font-bold text-xl">מערכת ניהול קריאות שירות</p>
-        </div>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+        <p className="text-center text-sky-800 font-semibold text-lg mb-6">מערכת ניהול קריאות שירות</p>
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
@@ -60,7 +55,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="example@divident.com"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-white/90"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
 
@@ -72,7 +67,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-white/90"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
 
