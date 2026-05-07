@@ -59,3 +59,4 @@ export const TECHNICIANS = [
   'איתי',
   'מתן',
   'יפתח',
+];

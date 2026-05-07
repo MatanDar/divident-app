@@ -262,6 +262,20 @@ function HomeContent() {
           </div>
         </div>
 
+
         <p className="text-xs text-gray-400 text-center mt-4 mb-2">
           DIVIDENT · מערכת ניהול קריאות שירות
-  
+        </p>
+      </main>
+      <BottomTabs />
+    </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
+  );
+}

@@ -38,3 +38,4 @@ export async function DELETE(
     console.error('DELETE /api/calls error:', error);
     return NextResponse.json({ error: 'Failed to delete call' }, { status: 500 });
   }
+}
