@@ -1,6 +1,7 @@
 export type CallStatus =
   | 'ממתין להמשך טיפול'
   | 'לתאם'
+  | 'בטיפול'
   | 'הושלם'
   | 'ממתין לחיוב';
 
@@ -25,6 +26,7 @@ export const STATUS_COLORS: Record<string, string> = {
   'לתאם': 'bg-yellow-100 text-yellow-800 border-yellow-300',
   'הושלם': 'bg-green-100 text-green-800 border-green-300',
   'ממתין לחיוב': 'bg-orange-100 text-orange-800 border-orange-300',
+  'בטיפול': 'bg-purple-100 text-purple-800 border-purple-300',
 };
 
 export const DEVICE_TYPES = [

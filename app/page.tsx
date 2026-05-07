@@ -13,6 +13,7 @@ const STATUS_FILTER_OPTIONS = [
   'הכל',
   'ממתין להמשך טיפול',
   'לתאם',
+  'בטיפול',
   'הושלם',
   'ממתין לחיוב',
 ];
@@ -42,6 +43,7 @@ function HomeContent() {
   const [technicianFilter, setTechnicianFilter] = useState('הכל');
   const [search, setSearch] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [stats, setStats] = useState({ lachiyuv: 0, hushlimu: 0 });
   const lastRowRef = useRef<HTMLTableRowElement>(null);
 
   useEffect(() => {
@@ -61,7 +63,10 @@ function HomeContent() {
   }, []);
 
   useEffect(() => {
-    if (user) fetchCalls();
+    if (user) {
+      fetchCalls();
+      fetch('/api/stats').then(r => r.json()).then(setStats).catch(() => {});
+    }
   }, [user, fetchCalls]);
 
   // Scroll to last row when returning from new-call
@@ -144,8 +149,8 @@ function HomeContent() {
           {[
             { label: 'ממתין להמשך טיפול', value: calls.filter(c => c.status === 'ממתין להמשך טיפול').length, color: 'text-sky-700 bg-sky-50 border-sky-200' },
             { label: 'לתאם', value: calls.filter(c => c.status === 'לתאם').length, color: 'text-yellow-600 bg-yellow-50 border-yellow-200' },
-            { label: 'ממתין לחיוב', value: calls.filter(c => c.status === 'ממתין לחיוב').length, color: 'text-orange-600 bg-orange-50 border-orange-200' },
-            { label: 'הושלם', value: calls.filter(c => c.status === 'הושלם').length, color: 'text-green-600 bg-green-50 border-green-200' },
+            { label: 'ממתין לחיוב', value: stats.lachiyuv, color: 'text-orange-600 bg-orange-50 border-orange-200' },
+            { label: 'הושלמו', value: stats.hushlimu, color: 'text-green-600 bg-green-50 border-green-200' },
           ].map((stat) => (
             <div key={stat.label} className={`rounded-xl border p-4 ${stat.color}`}>
               <p className="text-2xl font-bold">{stat.value}</p>

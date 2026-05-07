@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { DEVICE_TYPES, TECHNICIANS } from '@/lib/types';
 
-const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'הושלם', 'ממתין לחיוב'];
+const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'בטיפול', 'הושלם', 'ממתין לחיוב'];
 
 export default function EditCallPage() {
   const router = useRouter();
@@ -72,8 +72,14 @@ export default function EditCallPage() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed');
+      const result = await res.json();
       setSuccess(true);
-      setTimeout(() => router.push('/'), 1500);
+      if (result.moved) {
+        // הקריאה הועברה לגיליון אחר — חזור מיד לדף הראשי
+        setTimeout(() => router.push('/'), 1000);
+      } else {
+        setTimeout(() => router.push('/'), 1500);
+      }
     } catch (err) {
       console.error(err);
       alert('שגיאה בשמירה. נסה שוב.');

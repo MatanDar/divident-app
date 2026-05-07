@@ -120,6 +120,35 @@ export async function updateCall(rowNumber: number, data: Record<string, string>
   });
 }
 
+export async function moveCall(rowNumber: number, data: Record<string, string>, targetSheet: string, sourceSheet = 'לוח ראשי') {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const values = [[
+    data.customerName || '',
+    data.customerNumber || '',
+    data.phone || '',
+    data.status || '',
+    data.deviceType || '',
+    data.description || '',
+    data.technician || '',
+    data.visitDate || '',
+    data.closingDate || '',
+    data.priority || '',
+  ]];
+
+  // 1. הוסף לגיליון היעד
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${targetSheet}!A:J`,
+    valueInputOption: 'USER_ENTERED',
+    requestBody: { values },
+  });
+
+  // 2. מחק מהגיליון המקור
+  await deleteCall(rowNumber, sourceSheet);
+}
+
 export async function deleteCall(rowNumber: number, sheetName = 'לוח ראשי') {
   const auth = getAuth();
   const sheets = google.sheets({ version: 'v4', auth });
