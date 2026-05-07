@@ -21,7 +21,7 @@ export default function EditHushlimuCallPage() {
     customerNumber: '',
     phone: '',
     technician: '',
-    status: 'ממתין להמשך טיפול',
+    status: 'הושלמה',
     deviceType: '',
     description: '',
     visitDate: '',
@@ -44,7 +44,7 @@ export default function EditHushlimuCallPage() {
           customerNumber: call.customerNumber || '',
           phone: call.phone || '',
           technician: call.technician || '',
-          status: call.status || 'ממתין להמשך טיפול',
+          status: call.status || 'הושלמה',
           deviceType: call.deviceType || '',
           description: call.description || '',
           visitDate: call.visitDate || '',
@@ -179,4 +179,12 @@ export default function EditHushlimuCallPage() {
             <button type="submit" disabled={saving} className="flex-1 bg-sky-600 hover:bg-sky-500 disabled:bg-sky-300 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
               {saving ? 'שומר...' : 'עדכן קריאה'}
             </button>
-            <button type="button" onClick={() => router.push('/hushlimu')} className="px-6 bg-gray-100 hover:bg-gray-200 text-gray
+            <button type="button" onClick={() => router.push('/hushlimu')} className="px-6 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 rounded-lg transition-colors text-sm">
+              ביטול
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+  );
+}

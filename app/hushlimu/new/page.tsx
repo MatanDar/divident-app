@@ -156,4 +156,5 @@ export default function NewHushlimuCallPage() {
         </form>
       </main>
     </div>
-  )
+  );
+}
