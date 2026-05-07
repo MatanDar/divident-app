@@ -14,7 +14,7 @@ const STATUS_FILTER_OPTIONS = [
   'ממתין להמשך טיפול',
   'לתאם',
   'בטיפול',
-  'הושלם',
+  'הושלמה',
   'ממתין לחיוב',
 ];
 
@@ -145,16 +145,17 @@ function HomeContent() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-6">
           {[
             { label: 'ממתין להמשך טיפול', value: calls.filter(c => c.status === 'ממתין להמשך טיפול').length, color: 'text-sky-700 bg-sky-50 border-sky-200' },
             { label: 'לתאם', value: calls.filter(c => c.status === 'לתאם').length, color: 'text-yellow-600 bg-yellow-50 border-yellow-200' },
+            { label: 'בטיפול', value: calls.filter(c => c.status === 'בטיפול').length, color: 'text-purple-700 bg-purple-50 border-purple-200' },
             { label: 'ממתין לחיוב', value: stats.lachiyuv, color: 'text-orange-600 bg-orange-50 border-orange-200' },
             { label: 'הושלמו', value: stats.hushlimu, color: 'text-green-600 bg-green-50 border-green-200' },
           ].map((stat) => (
-            <div key={stat.label} className={`rounded-xl border p-4 ${stat.color}`}>
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-xs font-medium mt-0.5 opacity-80">{stat.label}</p>
+            <div key={stat.label} className={`rounded-xl border p-3 ${stat.color}`}>
+              <p className="text-xl font-bold">{stat.value}</p>
+              <p className="text-xs font-medium mt-0.5 opacity-80 leading-tight">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -263,17 +264,4 @@ function HomeContent() {
 
         <p className="text-xs text-gray-400 text-center mt-4 mb-2">
           DIVIDENT · מערכת ניהול קריאות שירות
-        </p>
-      </main>
-      <BottomTabs />
-    </div>
-  );
-}
-
-export default function HomePage() {
-  return (
-    <Suspense>
-      <HomeContent />
-    </Suspense>
-  );
-}
+  

@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { DEVICE_TYPES, TECHNICIANS } from '@/lib/types';
 
-const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'בטיפול', 'הושלם', 'ממתין לחיוב'];
+const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'בטיפול', 'הושלמה', 'ממתין לחיוב'];
 
 export default function EditCallPage() {
   const router = useRouter();
@@ -188,4 +188,3 @@ export default function EditCallPage() {
       </main>
     </div>
   );
-}

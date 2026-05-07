@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { DEVICE_TYPES, TECHNICIANS } from '@/lib/types';
 
-const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'בטיפול', 'הושלם', 'ממתין לחיוב'];
+const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'בטיפול', 'הושלמה', 'ממתין לחיוב'];
 
 export default function EditLachiyuvCallPage() {
   const router = useRouter();
@@ -72,8 +72,13 @@ export default function EditLachiyuvCallPage() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed');
+      const result = await res.json();
       setSuccess(true);
-      setTimeout(() => router.push('/lachiyuv'), 1500);
+      if (result.moved && result.destination === 'main') {
+        setTimeout(() => router.push('/'), 1000);
+      } else {
+        setTimeout(() => router.push('/lachiyuv'), 1500);
+      }
     } catch (err) {
       console.error(err);
       alert('שגיאה בשמירה. נסה שוב.');
@@ -174,12 +179,4 @@ export default function EditLachiyuvCallPage() {
             <button type="submit" disabled={saving} className="flex-1 bg-sky-600 hover:bg-sky-500 disabled:bg-sky-300 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
               {saving ? 'שומר...' : 'עדכן קריאה'}
             </button>
-            <button type="button" onClick={() => router.push('/lachiyuv')} className="px-6 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 rounded-lg transition-colors text-sm">
-              ביטול
-            </button>
-          </div>
-        </form>
-      </main>
-    </div>
-  );
-}
+            <button type="button" onClick={() => router.push('/lachiyuv')} className="px-6 bg-gray-100 hover:bg-gray-200 text-gray

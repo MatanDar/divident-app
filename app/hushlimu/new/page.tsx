@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { DEVICE_TYPES, TECHNICIANS } from '@/lib/types';
 
-const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'בטיפול', 'הושלם', 'ממתין לחיוב'];
+const STATUSES = ['ממתין להמשך טיפול', 'לתאם', 'בטיפול', 'הושלמה', 'ממתין לחיוב'];
 
 export default function NewHushlimuCallPage() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function NewHushlimuCallPage() {
     customerNumber: '',
     phone: '',
     technician: '',
-    status: 'הושלם',
+    status: 'הושלמה',
     deviceType: '',
     description: '',
     visitDate: '',
@@ -156,5 +156,4 @@ export default function NewHushlimuCallPage() {
         </form>
       </main>
     </div>
-  );
-}
+  )

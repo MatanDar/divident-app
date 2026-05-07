@@ -13,7 +13,7 @@ export async function PUT(
     if (data.status === 'ממתין לחיוב') {
       await moveCall(rowNumber, data, SHEET_NAMES.lachiyuv, SHEET_NAMES.main);
       return NextResponse.json({ success: true, moved: true, destination: 'lachiyuv' });
-    } else if (data.status === 'הושלם') {
+    } else if (data.status === 'הושלמה') {
       await moveCall(rowNumber, data, SHEET_NAMES.hushlimu, SHEET_NAMES.main);
       return NextResponse.json({ success: true, moved: true, destination: 'hushlimu' });
     } else {
@@ -38,4 +38,3 @@ export async function DELETE(
     console.error('DELETE /api/calls error:', error);
     return NextResponse.json({ error: 'Failed to delete call' }, { status: 500 });
   }
-}

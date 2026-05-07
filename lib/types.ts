@@ -2,7 +2,7 @@ export type CallStatus =
   | 'ממתין להמשך טיפול'
   | 'לתאם'
   | 'בטיפול'
-  | 'הושלם'
+  | 'הושלמה'
   | 'ממתין לחיוב';
 
 export interface ServiceCall {
@@ -24,7 +24,7 @@ export interface ServiceCall {
 export const STATUS_COLORS: Record<string, string> = {
   'ממתין להמשך טיפול': 'bg-sky-100 text-sky-800 border-sky-300',
   'לתאם': 'bg-yellow-100 text-yellow-800 border-yellow-300',
-  'הושלם': 'bg-green-100 text-green-800 border-green-300',
+  'הושלמה': 'bg-green-100 text-green-800 border-green-300',
   'ממתין לחיוב': 'bg-orange-100 text-orange-800 border-orange-300',
   'בטיפול': 'bg-purple-100 text-purple-800 border-purple-300',
 };
@@ -59,4 +59,3 @@ export const TECHNICIANS = [
   'איתי',
   'מתן',
   'יפתח',
-];
