@@ -187,7 +187,11 @@ function HushlimuContent() {
                       >
                         <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{call.customerName}</td>
                         <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{call.customerNumber || '—'}</td>
-                        <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{call.phone || '—'}</td>
+                        <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                          {call.phone
+                            ? <a href={`tel:${call.phone}`} className="text-sky-600 hover:text-sky-800 hover:underline">{call.phone}</a>
+                            : '—'}
+                        </td>
                         <td className="px-4 py-3 whitespace-nowrap">
                           <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs font-medium">
                             {call.deviceType || '—'}
